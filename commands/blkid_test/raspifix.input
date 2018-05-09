@@ -1,0 +1,4 @@
+/dev/mmcblk0p2: UUID="64a5e86f-5ed3-4c9f-aab3-c4ae24bff95a" TYPE="ext4" LABEL="system"
+/dev/mmcblk0p1: SEC_TYPE="msdos" UUID="3312-932F" TYPE="vfat" LABEL="boot"
+/dev/sdb1: LABEL="black" UUID="76e7d7d4-f6e9-4867-83a7-03eaa3fc878d" TYPE="ext4"
+/dev/sda1: LABEL="silver" UUID="8095dbdf-9b0a-4dda-9352-d56366af43c8" TYPE="ext4"

@@ -1,0 +1,47 @@
+{
+	"ImportPath": "github.com/framps/raspiBackup/go",
+	"GoVersion": "go1.10",
+	"GodepVersion": "v79",
+	"Deps": [
+		{
+			"ImportPath": "go.uber.org/atomic",
+			"Comment": "v1.1.0",
+			"Rev": "3b8db5e93c4c02efbc313e17b2e796b0914a01fb"
+		},
+		{
+			"ImportPath": "go.uber.org/zap",
+			"Comment": "v1.1.0",
+			"Rev": "a2773be06b9ac7c318a3a105b5c310af5730c6b4"
+		},
+		{
+			"ImportPath": "go.uber.org/zap/buffer",
+			"Comment": "v1.1.0",
+			"Rev": "a2773be06b9ac7c318a3a105b5c310af5730c6b4"
+		},
+		{
+			"ImportPath": "go.uber.org/zap/internal/bufferpool",
+			"Comment": "v1.1.0",
+			"Rev": "a2773be06b9ac7c318a3a105b5c310af5730c6b4"
+		},
+		{
+			"ImportPath": "go.uber.org/zap/internal/color",
+			"Comment": "v1.1.0",
+			"Rev": "a2773be06b9ac7c318a3a105b5c310af5730c6b4"
+		},
+		{
+			"ImportPath": "go.uber.org/zap/internal/exit",
+			"Comment": "v1.1.0",
+			"Rev": "a2773be06b9ac7c318a3a105b5c310af5730c6b4"
+		},
+		{
+			"ImportPath": "go.uber.org/zap/internal/multierror",
+			"Comment": "v1.1.0",
+			"Rev": "a2773be06b9ac7c318a3a105b5c310af5730c6b4"
+		},
+		{
+			"ImportPath": "go.uber.org/zap/zapcore",
+			"Comment": "v1.1.0",
+			"Rev": "a2773be06b9ac7c318a3a105b5c310af5730c6b4"
+		}
+	]
+}
