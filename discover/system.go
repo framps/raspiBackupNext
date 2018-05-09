@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/framps/raspiBackup/go/commands"
-	"github.com/framps/raspiBackup/go/tools"
+	"github.com/framps/raspiBackupNext/commands"
+	"github.com/framps/raspiBackupNext/tools"
 )
 
 // System -

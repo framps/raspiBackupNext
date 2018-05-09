@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/framps/raspiBackup/go/tools"
+	"github.com/framps/raspiBackupNext/tools"
 	"github.com/stretchr/testify/assert"
 )
 

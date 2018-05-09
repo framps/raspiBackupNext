@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/framps/raspiBackup/go/tools"
+	"github.com/framps/raspiBackupNext/tools"
 	"go.uber.org/zap"
 )
 

@@ -5,7 +5,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/framps/raspiBackup/go/tools"
+	"github.com/framps/raspiBackupNext/tools"
 )
 
 // Cmd -
