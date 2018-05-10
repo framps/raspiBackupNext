@@ -18,7 +18,7 @@ test:
 test-verbose:
 		go test ${MYFILES} -v
 
-build: test build-local build-raspi
+build: test-verbose build-local build-raspi
 
 build-local:
 	go build -o ${BIN_DIR}/${TARGET} ${TARGET}.go
