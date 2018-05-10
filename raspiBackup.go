@@ -37,5 +37,14 @@ func collectSystem() {
 }
 
 func discoverSystem() {
-	fmt.Printf("%s\n", model.NewSystem())
+	system, err := model.NewSystem()
+	tools.HandleError(err)
+	fmt.Printf("*** From system:\n%s\n", system)
+	if err := model.NewSystemToJson("system.model"); err != nil {
+		tools.HandleError(err)
+	}
+	if system, err = model.NewSystemFromJson("system.model"); system != nil {
+		tools.HandleError(err)
+	}
+	fmt.Printf("*** From json:\n%s\n", system)
 }
