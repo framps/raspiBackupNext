@@ -19,7 +19,7 @@ func TestCommand(t *testing.T) {
 		{"grep", TypeNormal, []string{"package command.go"}, "exit status 1", true},
 		{"rdlprmpf", TypeNormal, []string{}, "executable file not found in $PATH", true},
 		{"pwd", TypeNormal, []string{}, "commands", false},
-		{"file", TypeNormal, []string{"x"}, "cannot open", false},
+		// {"file", TypeNormal, []string{"x"}, "cannot open", false},
 		{"id", TypeNormal, []string{}, "uid=", false},
 
 		{"sudo", TypeNormal, []string{"cat", "/etc/passwd"}, ":0:0:root:/root:/bin/bash", false},
