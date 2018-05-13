@@ -9,6 +9,7 @@ import (
 	"os"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/framps/raspiBackupNext/tools"
@@ -17,12 +18,30 @@ import (
 
 // LsblkDisk -
 type LsblkDisk struct {
-	Name string
-	Size string
+	Name       string
+	Partitions map[int]*LsblkPartition
+}
+
+// NewLsblkDisk -
+func NewLsblkDisk(name string) *LsblkDisk {
+	disk := LsblkDisk{Name: name}
+	disk.Partitions = make(map[int]*LsblkPartition, 16)
+	return &disk
+}
+
+// LsblkPartition -
+type LsblkPartition struct {
+	Number     int
+	MajMin     string
+	Rm         string
+	Size       int64
+	Ro         string
+	Type       string
+	Mountpoint string
 }
 
 func (d LsblkDisk) String() string {
-	return fmt.Sprintf("Name: %s Size: %s", d.Name, d.Size)
+	return fmt.Sprintf("Name: %s", d.Name)
 }
 
 // LsblkDisks -
@@ -58,7 +77,7 @@ func NewLsblkDisks() (*LsblkDisks, error) {
 
 	lsblkids := LsblkDisks{make(map[string]*LsblkDisk, 16)}
 
-	command := NewCommand(TypeSudo, "lsblk", "-P", "-d")
+	command := NewCommand(TypeSudo, "lsblk", "-r", "-n", "-b")
 	result, err := command.Execute()
 	if err != nil {
 		logger.Errorf("NewLsblkid failed: %s", err.Error())
@@ -74,26 +93,48 @@ func NewLsblkDisks() (*LsblkDisks, error) {
 }
 
 /*
-NAME="sda" MAJ:MIN="8:0" RM="0" SIZE="931.5G" RO="0" TYPE="disk" MOUNTPOINT=""
-NAME="sdb" MAJ:MIN="8:16" RM="0" SIZE="931.5G" RO="0" TYPE="disk" MOUNTPOINT=""
-NAME="loop0" MAJ:MIN="7:0" RM="0" SIZE="3.7G" RO="0" TYPE="loop" MOUNTPOINT=""
-NAME="mmcblk0" MAJ:MIN="179:0" RM="0" SIZE="14.9G" RO="0" TYPE="disk" MOUNTPOINT=""
+sda 8:0 0 250059350016 0 disk
+sda1 8:1 0 231054770176 0 part /
+sdb 8:16 0 1000204886016 0 disk
+sdb1 8:17 0 1000202241024 0 part
+Backup-System 252:2 0 329231892480 0 lvm /backup/system
+Backup-Home 252:5 0 670967005184 0 lvm /backup/home
+sdc 8:32 0 2000398934016 0 disk
+Second2-BigData 252:0 0 1073741824000 0 lvm /disks/bigdata
+sdd 8:48 0 2000398934016 0 disk
+data2-VMWare 252:1 0 429496729600 0 lvm /disks/VMware
+data2-homeDisk 252:3 0 322122547200 0 lvm /disks/homeDisk
+data2-swap 252:4 0 8589934592 0 lvm
 */
 
 func (d *LsblkDisks) parse(reader io.Reader) *LsblkDisks {
 
 	scanner := bufio.NewScanner(reader)
 
-	r := regexp.MustCompile(`NAME="([^"]*)".*SIZE="([^"]*)"`)
+	re := regexp.MustCompile(`[^\d]+([\d]+)`) // sda or sda1
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		if matchGroup := r.FindAllStringSubmatch(line, -1); matchGroup != nil {
-			m := matchGroup[0]
-			name := "/dev/" + m[1]
-			size := m[2]
-			d.Disks[name] = &LsblkDisk{Name: name, Size: size}
+		elements := strings.Split(line, " ")
+
+		fmt.Printf("%#v\n", elements)
+
+		var disk *LsblkDisk
+		if elements[5] == "disk" {
+			disk = NewLsblkDisk(elements[0])
+			continue
+		} else if elements[5] == "part" {
+			matches := re.FindStringSubmatch(elements[0])
+			partitionNumberString := matches[1]
+			partitionNumber, _ := strconv.Atoi(partitionNumberString)
+			partition := LsblkPartition{}
+			size, _ := strconv.ParseInt(elements[3], 10, 64)
+			partition.Number, partition.MajMin, partition.Rm, partition.Size, partition.Ro, partition.Type, partition.Mountpoint =
+				partitionNumber, elements[1], elements[2], size, elements[4], elements[5], elements[6]
+			fmt.Printf("%#v\n", partition)
+			disk.Partitions[partitionNumber] = &partition
 		}
+
 	}
 	return d
 }

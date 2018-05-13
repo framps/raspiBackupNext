@@ -29,6 +29,13 @@ type Partition struct {
 	Ptype    string
 }
 
+func (p Partition) String() string {
+	return fmt.Sprintf("PartitionNumber: %d - StartBlock: %d - EndBlock: %d - Size: %d - Type: %s - FileSystem: %s - Flags: %s "+
+		"UUid: %s - Partuuid: %s - Label: %s - PType: %s",
+		p.Number, p.Start, p.End, p.Size, p.Type, p.FileSystem, p.Flags,
+		p.Uuid, p.Partuuid, p.Label, p.Ptype)
+}
+
 // Disk -
 type Disk struct {
 	Name               string // /dev/sda or /dev/mmcblk0p or /dev/loop
@@ -40,7 +47,14 @@ type Disk struct {
 }
 
 func (d Disk) String() string {
-	return fmt.Sprintf("Name: %s", d.Name)
+	var result bytes.Buffer
+	result.WriteString(fmt.Sprintf("Name: %s - Size: %s - LogicalSectorSize: %d - PhysicalSectorSize: %d - PartitionTableType: %s\n",
+		d.Name, d.Size, d.SectorSizeLogical, d.SectorSizePhysical, d.PartitionTableType))
+
+	for _, p := range d.Partitions {
+		result.WriteString(p.String())
+	}
+	return result.String()
 }
 
 // System -
@@ -53,17 +67,34 @@ type System struct {
 // NewSystem -
 func NewSystem() *System {
 
+	logger := tools.Log
+
 	system := System{}
 
+	// retrieve all known disks of system
 	blkidDisks, err := commands.NewBlkidDisks()
-	if err != nil {
-		tools.HandleError(err)
-	}
+	tools.HandleError(err)
 
 	for _, d := range blkidDisks.Disks {
-		disk := Disk{}
-		copier.Copy(&disk, &d)
+
+		logger.Debugf("Processing disk %s", d.Name)
+		disk := Disk{Name: d.Name}
+
+		partedDisk, err := commands.NewPartedDisk(disk.Name)
+		tools.HandleError(err)
+		fmt.Printf("---> %s\n", partedDisk)
+		copier.Copy(&disk, &partedDisk)
 		system.Disks = append(system.Disks, &disk)
+
+		disk.Partitions = make(map[int]*Partition, len(d.Partitions))
+
+		for _, p := range d.Partitions {
+			partition := Partition{}
+			//copier.Copy(&partition, &p)
+			fmt.Printf("%#v\n", *partedDisk.Partitions[p.Number])
+			copier.Copy(&partition, partedDisk.Partitions[p.Number])
+			disk.Partitions[p.Number] = &partition
+		}
 	}
 
 	return &system
