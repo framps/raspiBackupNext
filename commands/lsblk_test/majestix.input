@@ -1,0 +1,12 @@
+sda 8:0 0 250059350016 0 disk 
+sda1 8:1 0 231054770176 0 part /
+sdb 8:16 0 1000204886016 0 disk 
+sdb1 8:17 0 1000202241024 0 part 
+Backup-System 252:4 0 329231892480 0 lvm /backup/system
+Backup-Home 252:5 0 670967005184 0 lvm /backup/home
+sdc 8:32 0 2000398934016 0 disk 
+Second2-BigData 252:0 0 1073741824000 0 lvm /disks/bigdata
+sdd 8:48 0 2000398934016 0 disk 
+data2-VMWare 252:1 0 429496729600 0 lvm /disks/VMware
+data2-homeDisk 252:2 0 322122547200 0 lvm /disks/homeDisk
+data2-swap 252:3 0 8589934592 0 lvm 

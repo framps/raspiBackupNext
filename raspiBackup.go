@@ -20,6 +20,10 @@ func main() {
 	logger := tools.NewLogger(*debugFlag)
 	defer logger.Sync()
 
+	if !*collectFlag && !*discoverFlag {
+		*collectFlag = true
+	}
+
 	if *collectFlag {
 		collectSystem()
 		os.Exit(0)

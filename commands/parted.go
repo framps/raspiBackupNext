@@ -127,9 +127,10 @@ func (d *PartedDisk) parse(reader io.Reader) *PartedDisk {
 }
 
 // NewPartedDisk -
-func NewPartedDisk(diskDeviceName string) (*PartedDisk, error) {
+func NewPartedDisk(diskName string) (*PartedDisk, error) {
 
 	logger := tools.Log
+	diskDeviceName := "/dev/" + diskName
 
 	disk := PartedDisk{Partitions: make(map[int]*PartedPartition, 16)}
 
