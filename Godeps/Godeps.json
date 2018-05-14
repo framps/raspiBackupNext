@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/framps/raspiBackup/go",
+	"ImportPath": "github.com/framps/raspiBackupNext/go",
 	"GoVersion": "go1.10",
 	"GodepVersion": "v79",
 	"Deps": [

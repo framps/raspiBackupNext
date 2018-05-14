@@ -15,8 +15,8 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/framps/raspiBackup/go/tools"
 	"github.com/framps/raspiBackupNext/commands"
+	"github.com/framps/raspiBackupNext/tools"
 	"github.com/jinzhu/copier"
 )
 
