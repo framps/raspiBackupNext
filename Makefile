@@ -1,3 +1,11 @@
+#######################################################################################################################
+#
+#    Next raspiBackup version written in go
+#
+#    Copyright (C) 2018 framp at linux-tips-and-tricks dot de
+#
+########################################################################################################################
+
 .DEFAULT_GOAL := build
 TARGET=raspiBackup
 BIN_DIR=bin
@@ -18,7 +26,7 @@ test:
 test-verbose:
 		go test ${MYFILES} -v
 
-build: test build-local build-raspi
+build: test-verbose build-local build-raspi
 
 build-local:
 	go build -o ${BIN_DIR}/${TARGET} ${TARGET}.go

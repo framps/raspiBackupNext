@@ -1,5 +1,13 @@
 package commands
 
+//######################################################################################################################
+//
+//    Next raspiBackup version written in go
+//
+//    Copyright (C) 2018 framp at linux-tips-and-tricks dot de
+//
+//#######################################################################################################################
+
 import (
 	"bufio"
 	"bytes"
@@ -149,6 +157,7 @@ func (d *LsblkDisks) parse(reader io.Reader) *LsblkDisks {
 				partitionNumber, elements[1], elements[2], size, elements[4], elements[5], elements[6]
 			disk.Partitions[partitionNumber] = &partition
 		}
+
 	}
 	if disk != nil {
 		d.Disks[disk.Name] = disk

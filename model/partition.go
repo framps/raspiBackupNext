@@ -1,11 +1,22 @@
 package model
 
+//######################################################################################################################
+//
+//    Next raspiBackup version written in go
+//
+//    Copyright (C) 2018 framp at linux-tips-and-tricks dot de
+//
+//#######################################################################################################################
+
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os"
 
+	"github.com/framps/raspiBackup/go/tools"
 	"github.com/framps/raspiBackupNext/commands"
-	"github.com/framps/raspiBackupNext/tools"
 	"github.com/jinzhu/copier"
 )
 
@@ -65,7 +76,7 @@ type System struct {
 }
 
 // NewSystem -
-func NewSystem() *System {
+func NewSystem() (*System, error) {
 
 	logger := tools.Log
 
@@ -82,7 +93,6 @@ func NewSystem() *System {
 
 		partedDisk, err := commands.NewPartedDisk(disk.Name)
 		tools.HandleError(err)
-		fmt.Printf("---> %s\n", partedDisk)
 		copier.Copy(&disk, &partedDisk)
 		system.Disks = append(system.Disks, &disk)
 
@@ -90,14 +100,12 @@ func NewSystem() *System {
 
 		for _, p := range d.Partitions {
 			partition := Partition{}
-			//copier.Copy(&partition, &p)
-			fmt.Printf("%#v\n", *partedDisk.Partitions[p.Number])
 			copier.Copy(&partition, partedDisk.Partitions[p.Number])
 			disk.Partitions[p.Number] = &partition
 		}
 	}
 
-	return &system
+	return &system, nil
 }
 
 func (s System) String() string {
@@ -110,4 +118,43 @@ func (s System) String() string {
 	}
 
 	return result.String()
+}
+
+// NewSystemToJSON - -
+func NewSystemToJSON(fileName string) error {
+
+	b, err := NewSystem()
+	if err != nil {
+		return err
+	}
+
+	var j []byte
+	if j, err = json.MarshalIndent(b, "", " "); err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(fileName, j, os.ModePerm)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+// NewSystemFromJson -
+func NewSystemFromJson(fileName string) (*System, error) {
+
+	j, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		return nil, err
+	}
+
+	var s System
+	if err := json.Unmarshal(j, &s); err != nil {
+		return nil, err
+	}
+
+	return &s, nil
+
 }
