@@ -32,11 +32,15 @@ type LsblkDisk struct {
 
 func (d LsblkDisk) String() string {
 	var result bytes.Buffer
-	result.WriteString(fmt.Sprintf("Name: %s", d.Name))
+	hdr := fmt.Sprintf("DiskName: %s - ", d.Name)
+	result.WriteString(hdr)
 	if len(d.Partitions) > 0 {
-		result.WriteString(" - ")
 		for i := range d.Partitions {
 			result.WriteString(d.Partitions[i].String())
+			if i < len(d.Partitions)-1 {
+				result.WriteString("\n")
+				result.WriteString(hdr)
+			}
 		}
 	}
 	return result.String()
@@ -51,6 +55,7 @@ func NewLsblkDisk(name string) *LsblkDisk {
 
 // LsblkPartition -
 type LsblkPartition struct {
+	Name       string
 	Number     int
 	MajMin     string
 	Rm         string
@@ -62,7 +67,8 @@ type LsblkPartition struct {
 
 func (p LsblkPartition) String() string {
 	var result bytes.Buffer
-	result.WriteString(fmt.Sprintf("Number: %d - MajMin: %s - RM: %s - Size: %d - RO: %s - Type: %s - Mountpoint: %s", p.Number, p.MajMin, p.Rm, p.Size, p.Ro, p.Type, p.Mountpoint))
+	result.WriteString(fmt.Sprintf("PartitionName: %s - Number: %d - MajMin: %s - RM: %s - Size: %d - RO: %s - Type: %s - Mountpoint: %s",
+		p.Name, p.Number, p.MajMin, p.Rm, p.Size, p.Ro, p.Type, p.Mountpoint))
 	return result.String()
 }
 
@@ -73,8 +79,6 @@ type LsblkDisks struct {
 
 func (d LsblkDisks) String() string {
 	var result bytes.Buffer
-	result.WriteString(fmt.Sprintf("Disks:\n"))
-
 	index := make([]*LsblkDisk, 0, len(d.Disks))
 
 	for _, disk := range d.Disks {
@@ -129,11 +133,21 @@ data2-homeDisk 252:3 0 322122547200 0 lvm /disks/homeDisk
 data2-swap 252:4 0 8589934592 0 lvm
 */
 
+/*
+sda 8:0 0 1000204886016 0 disk
+sda1 8:1 0 1000202043392 0 part /disks/silver
+sdb 8:16 0 1000204886016 0 disk
+sdb1 8:17 0 1000204853760 0 part /disks/black
+mmcblk0 179:0 0 15931539456 0 disk
+mmcblk0p1 179:1 0 58720256 0 part /boot
+mmcblk0p2 179:2 0 15868624896 0 part /
+*/
+
 func (d *LsblkDisks) parse(reader io.Reader) *LsblkDisks {
 
 	scanner := bufio.NewScanner(reader)
 
-	re := regexp.MustCompile(`[^\d]+([\d]+)`) // sda or sda1
+	re := regexp.MustCompile(`([[:alpha:]]+(?:\d+p)?)([\d]+)`) // sda or sda1 or mmcblk0 or mmcblk0p1
 
 	var disk *LsblkDisk
 
@@ -149,12 +163,12 @@ func (d *LsblkDisks) parse(reader io.Reader) *LsblkDisks {
 			continue
 		} else if elements[5] == "part" {
 			matches := re.FindStringSubmatch(elements[0])
-			partitionNumberString := matches[1]
+			partitionNumberString := matches[2]
 			partitionNumber, _ := strconv.Atoi(partitionNumberString)
 			partition := LsblkPartition{}
 			size, _ := strconv.ParseInt(elements[3], 10, 64)
-			partition.Number, partition.MajMin, partition.Rm, partition.Size, partition.Ro, partition.Type, partition.Mountpoint =
-				partitionNumber, elements[1], elements[2], size, elements[4], elements[5], elements[6]
+			partition.Name, partition.Number, partition.MajMin, partition.Rm, partition.Size, partition.Ro, partition.Type, partition.Mountpoint =
+				matches[1]+matches[2], partitionNumber, elements[1], elements[2], size, elements[4], elements[5], elements[6]
 			disk.Partitions[partitionNumber] = &partition
 		}
 

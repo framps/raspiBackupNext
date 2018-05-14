@@ -1,0 +1,4 @@
+DiskName: mmcblk0 - PartitionName: mmcblk0p1 - Number: 1 - MajMin: 179:1 - RM: 0 - Size: 58720256 - RO: 0 - Type: part - Mountpoint: /boot
+DiskName: mmcblk0 - PartitionName: mmcblk0p2 - Number: 2 - MajMin: 179:2 - RM: 0 - Size: 15868624896 - RO: 0 - Type: part - Mountpoint: /
+DiskName: sda - PartitionName: sda1 - Number: 1 - MajMin: 8:1 - RM: 0 - Size: 1000202043392 - RO: 0 - Type: part - Mountpoint: /disks/silver
+DiskName: sdb - PartitionName: sdb1 - Number: 1 - MajMin: 8:17 - RM: 0 - Size: 1000204853760 - RO: 0 - Type: part - Mountpoint: /disks/black\n

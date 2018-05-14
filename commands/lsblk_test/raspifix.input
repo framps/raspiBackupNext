@@ -1,0 +1,7 @@
+sda 8:0 0 1000204886016 0 disk
+sda1 8:1 0 1000202043392 0 part /disks/silver
+sdb 8:16 0 1000204886016 0 disk
+sdb1 8:17 0 1000204853760 0 part /disks/black
+mmcblk0 179:0 0 15931539456 0 disk
+mmcblk0p1 179:1 0 58720256 0 part /boot
+mmcblk0p2 179:2 0 15868624896 0 part /
