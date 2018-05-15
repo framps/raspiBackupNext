@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"sort"
 
 	"github.com/framps/raspiBackupNext/commands"
 	"github.com/framps/raspiBackupNext/tools"
@@ -110,10 +111,22 @@ func NewSystem() (*System, error) {
 
 func (s System) String() string {
 	var result bytes.Buffer
-	for i, d := range s.Disks {
-		result.WriteString(d.String())
-		if i != len(s.Disks)-1 {
-			result.WriteString("\n")
+
+	if len(s.Disks) > 0 {
+		index := make([]*Disk, 0, len(s.Disks))
+		for _, disk := range s.Disks {
+			index = append(index, disk)
+		}
+
+		sort.Slice(index, func(i, j int) bool {
+			return index[i].Name < index[j].Name
+		})
+
+		for i := range index {
+			result.WriteString(index[i].String())
+			if i != len(index)-1 {
+				result.WriteString("\n")
+			}
 		}
 	}
 

@@ -138,14 +138,13 @@ func (d *PartedDisk) parse(reader io.Reader) *PartedDisk {
 func NewPartedDisk(diskName string) (*PartedDisk, error) {
 
 	logger := tools.Log
-	diskDeviceName := "/dev/" + diskName
 
 	disk := PartedDisk{Partitions: make(map[int]*PartedPartition, 16)}
 
-	command := NewCommand(TypeSudo, "parted", "-m", diskDeviceName, "unit", "s", "print")
+	command := NewCommand(TypeSudo, "parted", "-m", diskName, "unit", "s", "print")
 	result, err := command.Execute()
 	if err != nil {
-		logger.Errorf("NewDisk failed for %s: %s", diskDeviceName, err.Error())
+		logger.Errorf("NewDisk failed for %s: %s", diskName, err.Error())
 		return nil, err
 	}
 

@@ -25,7 +25,7 @@ type System struct {
 
 func NewSystem() *System {
 
-	s := &System{}
+	s := System{}
 	var err error
 
 	s.SystemDevices, err = commands.NewSystemDevices()
@@ -42,27 +42,23 @@ func NewSystem() *System {
 		partedDisks = append(partedDisks, partedDisk)
 	}
 
-	return s
+	return &s
 }
 
 func (s System) String() string {
 	var result bytes.Buffer
 
 	sep := strings.Repeat("*", 30)
-	/*
-		result.WriteString(sep + "Systemdevices" + sep + "\n")
-		result.WriteString(s.SystemDevices.String())
-		result.WriteString(sep + "*** Blkid ***" + sep + "\n")
-		result.WriteString(s.BlkidDisks.String())
-	*/
+	result.WriteString(sep + "Systemdevices" + sep + "\n")
+	result.WriteString(s.SystemDevices.String())
+	result.WriteString(sep + "*** Blkid ***" + sep + "\n")
+	result.WriteString(s.BlkidDisks.String())
 	result.WriteString(sep + "*** Lsblk ***" + sep + "\n")
 	result.WriteString(s.LsblkDisks.String())
-	/*
-		result.WriteString(sep + "*** Parted ***" + sep + "\n")
-		for _, sd := range s.LsblkDisks.Disks {
-			partedDisk, _ := commands.NewPartedDisk(sd.Name)
-			result.WriteString(partedDisk.String())
-		}
-	*/
+	result.WriteString(sep + "*** Parted ***" + sep + "\n")
+	for _, sd := range s.LsblkDisks.Disks {
+		partedDisk, _ := commands.NewPartedDisk(sd.Name)
+		result.WriteString(partedDisk.String())
+	}
 	return result.String()
 }

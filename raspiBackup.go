@@ -29,7 +29,7 @@ func main() {
 	defer logger.Sync()
 
 	if !*collectFlag && !*discoverFlag {
-		*collectFlag = true
+		*discoverFlag = true
 	}
 
 	if *collectFlag {

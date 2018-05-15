@@ -10,7 +10,6 @@
 TARGET=raspiBackup
 BIN_DIR=bin
 MYFILES=$(shell go list ./... | grep -v /vendor/ | grep -v tools | grep -v -E '/raspiBackupNext$$' |  grep -v -E "discover|model")
-#MYFILES=$(shell go list ./... | grep -v /vendor/ | grep -v tools | grep -v -E "discover|model")
 
 ifdef DEBUG
 	DEBUG=-debug
@@ -26,7 +25,7 @@ test:
 	go test ${MYFILES}
 
 test-verbose:
-		go test ${MYFILES} -v
+	go test ${MYFILES} -v
 
 build: setup update test-verbose build-local build-raspi
 
