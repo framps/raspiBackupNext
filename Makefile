@@ -9,12 +9,14 @@
 .DEFAULT_GOAL := build
 TARGET=raspiBackup
 BIN_DIR=bin
-MYFILES=$(shell go list ./... | grep -v /vendor/ | grep -v tools | grep -v -E '/go[^/]')
+MYFILES=$(shell go list ./... | grep -v /vendor/ | grep -v tools | grep -v -E '/raspiBackupNext$$' |  grep -v -E "discover|model")
+#MYFILES=$(shell go list ./... | grep -v /vendor/ | grep -v tools | grep -v -E "discover|model")
+
 ifdef DEBUG
 	DEBUG=-debug
 endif
 
-setup: 
+setup:
 	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
 update:
