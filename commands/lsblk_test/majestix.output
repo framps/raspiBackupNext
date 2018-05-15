@@ -1,5 +1,4 @@
-Disks:
-Name: sda - Number: 1 - MajMin: 8:1 - RM: 0 - Size: 231054770176 - RO: 0 - Type: part - Mountpoint: /
-Name: sdb - Number: 1 - MajMin: 8:17 - RM: 0 - Size: 1000202241024 - RO: 0 - Type: part - Mountpoint: 
-Name: sdc
-Name: sdd
+DiskName: sda - PartitionName: sda1 - Number: 1 - MajMin: 8:1 - RM: 0 - Size: 231054770176 - RO: 0 - Type: part - Mountpoint: /
+DiskName: sdb - PartitionName: sdb1 - Number: 1 - MajMin: 8:17 - RM: 0 - Size: 1000202241024 - RO: 0 - Type: part - Mountpoint: 
+DiskName: sdc - 
+DiskName: sdd - 

@@ -34,9 +34,19 @@ func (d LsblkDisk) String() string {
 	var result bytes.Buffer
 	hdr := fmt.Sprintf("DiskName: %s - ", d.Name)
 	result.WriteString(hdr)
+
 	if len(d.Partitions) > 0 {
-		for i := range d.Partitions {
-			result.WriteString(d.Partitions[i].String())
+		index := make([]*LsblkPartition, 0, len(d.Partitions))
+		for _, partition := range d.Partitions {
+			index = append(index, partition)
+		}
+
+		sort.Slice(index, func(i, j int) bool {
+			return index[i].Name < index[j].Name
+		})
+
+		for i := range index {
+			result.WriteString(index[i].String())
 			if i < len(d.Partitions)-1 {
 				result.WriteString("\n")
 				result.WriteString(hdr)
@@ -81,16 +91,22 @@ func (d LsblkDisks) String() string {
 	var result bytes.Buffer
 	index := make([]*LsblkDisk, 0, len(d.Disks))
 
-	for _, disk := range d.Disks {
-		index = append(index, disk)
-	}
+	if len(d.Disks) > 0 {
+		for _, disk := range d.Disks {
+			index = append(index, disk)
+		}
 
-	sort.Slice(index, func(i, j int) bool {
-		return index[i].Name < index[j].Name
-	})
+		sort.Slice(index, func(i, j int) bool {
+			return index[i].Name < index[j].Name
+		})
 
-	for i := range index {
-		result.WriteString(fmt.Sprintf("%s\n", *(index[i])))
+		for i := range index {
+			result.WriteString(index[i].String())
+			if i < len(index)-1 {
+				result.WriteString("\n")
+			}
+		}
+		result.WriteString("\n")
 	}
 
 	return result.String()
