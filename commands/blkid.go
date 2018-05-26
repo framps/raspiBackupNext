@@ -70,7 +70,7 @@ type BlkidDisks struct {
 	Disks map[string]*BlkidDisk
 }
 
-func (b BlkidDisks) String() string {
+func (b *BlkidDisks) String() string {
 	var result bytes.Buffer
 
 	index := make([]*BlkidDisk, 0, len(b.Disks))
