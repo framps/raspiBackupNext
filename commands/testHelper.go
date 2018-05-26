@@ -1,5 +1,13 @@
 package commands
 
+//######################################################################################################################
+//
+//    Next raspiBackup version written in go
+//
+//    Copyright (C) 2018 framp at linux-tips-and-tricks dot de
+//
+//#######################################################################################################################
+
 import (
 	"io/ioutil"
 	"path/filepath"
@@ -16,7 +24,9 @@ type TestCommandType int
 const (
 	// Blkid -
 	Blkid TestCommandType = iota
+	// Lsblkid -
 	Lsblkid
+	// Parted -
 	Parted
 )
 
@@ -42,7 +52,7 @@ func Command(t *testing.T, command TestCommandType, testName string) {
 
 	tools.NewLogger(false)
 
-	files, err := filepath.Glob(testName + "_test/*.input")
+	files, err := filepath.Glob("testData/" + testName + "_test/*.input")
 	assert.NoErrorf(t, err, "Failed to retrieve testdata")
 
 	var tests int
