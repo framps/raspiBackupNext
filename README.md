@@ -1,3 +1,3 @@
 # raspiBackupNext
 
-Next version of raspiBackup written in go
+Next version of raspiBackup
