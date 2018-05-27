@@ -63,9 +63,20 @@ func (d Disk) String() string {
 	result.WriteString(fmt.Sprintf("Name: %s - Size: %s - LogicalSectorSize: %d - PhysicalSectorSize: %d - PartitionTableType: %s\n",
 		d.Name, d.Size, d.SectorSizeLogical, d.SectorSizePhysical, d.PartitionTableType))
 
-	for _, p := range d.Partitions {
-		result.WriteString(p.String())
+	index := make([]*Partition, 0, len(d.Partitions))
+	for _, partition := range d.Partitions {
+		index = append(index, partition)
 	}
+
+	sort.Slice(index, func(i, j int) bool {
+		return index[i].Name < index[j].Name
+	})
+
+	for _, partition := range index {
+		result.WriteString(fmt.Sprintf("%s", partition))
+		result.WriteString("\n")
+	}
+
 	return result.String()
 }
 
@@ -84,16 +95,17 @@ func NewSystem() (*System, error) {
 	system := System{}
 
 	// retrieve all known disks of system
-	blkidDisks, err := commands.NewBlkidDisks()
+	lsblkDisks, err := commands.NewLsblkDisks()
 	tools.HandleError(err)
 
-	for _, d := range blkidDisks.Disks {
+	for _, d := range lsblkDisks.Disks {
 
 		logger.Debugf("Processing disk %s", d.Name)
 		disk := Disk{Name: d.Name}
 
-		partedDisk, err := commands.NewPartedDisk(disk.Name)
+		partedDisk, err := commands.NewPartedDisk("/dev/" + disk.Name)
 		tools.HandleError(err)
+
 		copier.Copy(&disk, &partedDisk)
 		system.Disks = append(system.Disks, &disk)
 
