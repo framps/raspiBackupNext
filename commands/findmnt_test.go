@@ -17,7 +17,7 @@ import (
 func TestFindmnt(t *testing.T) {
 
 	cmds := []struct {
-		FullName        string // /dev/sda1, /dev/mmcblk3p2
+		DeviceName      string // /dev/sda1, /dev/mmcblk3p2
 		Number          int    // 1, 2
 		Disk            string // sda, mmcblk3
 		PartitionName   string // sda, mmcblk3p
@@ -36,13 +36,13 @@ func TestFindmnt(t *testing.T) {
 
 	for _, c := range cmds {
 
-		t.Logf("Testing device %s\n", c.FullName)
-		device, err := NewSystemDevice(c.FullName)
+		t.Logf("Testing device %s\n", c.DeviceName)
+		device, err := NewSystemDevice(c.DeviceName)
 
 		if !c.Err {
 			assert.NotNil(t, device)
 			assert.NoError(t, err)
-			assert.Equal(t, device.FullName, c.FullName)
+			assert.Equal(t, device.DeviceName, c.DeviceName)
 			assert.Equal(t, device.Number, c.Number)
 			assert.Equal(t, device.Disk, c.Disk)
 			assert.Equal(t, device.PartitionName, c.PartitionName)

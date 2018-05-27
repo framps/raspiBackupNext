@@ -83,8 +83,8 @@ func (d Disk) String() string {
 // System -
 type System struct {
 	Disks         []*Disk
-	Bootpartition *Partition
-	Rootpartition *Partition
+	Bootpartition *commands.SystemDevice
+	Rootpartition *commands.SystemDevice
 }
 
 // NewSystem -
@@ -125,7 +125,14 @@ func NewSystem() (*System, error) {
 		}
 	}
 
+	systemDevices, err := commands.NewSystemDevices()
+	tools.HandleError(err)
+
+	system.Bootpartition = systemDevices.Bootdevice
+	system.Bootpartition = systemDevices.Rootdevice
+
 	return &system, nil
+
 }
 
 func (s System) String() string {
@@ -147,6 +154,15 @@ func (s System) String() string {
 				result.WriteString("\n")
 			}
 		}
+	}
+
+	if s.Bootpartition != nil {
+		result.WriteString("Bootpartition - ")
+		result.WriteString(s.Bootpartition.String())
+	}
+	if s.Rootpartition != nil {
+		result.WriteString("Rootpartition - ")
+		result.WriteString(s.Rootpartition.String())
 	}
 
 	return result.String()

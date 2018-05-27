@@ -25,7 +25,7 @@ const notFound = "Not found"
 
 // SystemDevice -
 type SystemDevice struct {
-	FullName        string // /dev/sda1, /dev/mmcblk3p2
+	DeviceName      string // /dev/sda1, /dev/mmcblk3p2
 	Number          int    // 1, 2
 	Disk            string // sda, mmcblk3
 	PartitionName   string // sda1, mmcblk3p2
@@ -33,7 +33,7 @@ type SystemDevice struct {
 }
 
 func (p SystemDevice) String() string {
-	return fmt.Sprintf("FullName: %s Number: %d Disk: %s LocatedOnSDCard: %t\n", p.FullName, p.Number, p.Disk, p.LocatedOnSDCard)
+	return fmt.Sprintf("FullName: %s Number: %d Disk: %s LocatedOnSDCard: %t\n", p.DeviceName, p.Number, p.Disk, p.LocatedOnSDCard)
 }
 
 // NewSystemDevice -
@@ -41,7 +41,7 @@ func NewSystemDevice(fullName string) (*SystemDevice, error) {
 
 	logger := tools.Log
 
-	p := &SystemDevice{FullName: fullName, LocatedOnSDCard: false}
+	p := &SystemDevice{DeviceName: fullName, LocatedOnSDCard: false}
 
 	re := regexp.MustCompile("^/dev/([a-z]+)(([0-9]+)p)?([0-9]+)$")
 	matches := re.FindStringSubmatch(fullName)
