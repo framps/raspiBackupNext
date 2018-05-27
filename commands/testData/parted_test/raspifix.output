@@ -1,3 +1,3 @@
 Disk: /dev/mmcblk0 Size: 31116288s Sector size: 512/512 PartitiontableType: msdos
-Partition: /dev/mmcblk0p1 Partitionnumber: 0 Start: 8192 End: 122879 Size: 114688 Type: fat16
-Partition: /dev/mmcblk0p2 Partitionnumber: 1 Start: 122880 End: 31116287 Size: 30993408 Type: ext4
+Partition: /dev/mmcblk0p1 Partitionnumber: 1 Start: 8192 End: 122879 Size: 114688 Type: fat16
+Partition: /dev/mmcblk0p2 Partitionnumber: 2 Start: 122880 End: 31116287 Size: 30993408 Type: ext4

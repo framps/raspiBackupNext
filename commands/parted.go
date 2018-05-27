@@ -84,20 +84,13 @@ func (d *PartedDisk) parse(reader io.Reader) *PartedDisk {
 	scanner := bufio.NewScanner(reader)
 
 	// /dev/sde:15613952s:scsi:512:512:msdos:Generic STORAGE DEVICE:;
-	// /dev/sde1:15613952s:scsi:512:512:msdos:Generic STORAGE DEVICE:;
 	// /dev/mmcblk0:31116288s:sd/mmc:512:512:msdos:SD SL16G;
-	// /dev/mmcblk0p1:31116288s:sd/mmc:512:512:msdos:SD SL16G;
-	r := regexp.MustCompile(`^/dev/([a-z]+)(\d+?p?):`)
-	var partitionName string
+	r := regexp.MustCompile("^/dev/[^:]+:")
 	for scanner.Scan() {
 		line := scanner.Text()
-		if matchGroup := r.FindStringSubmatch(line); matchGroup != nil {
-			if len(matchGroup) == 2 {
-				partitionName = matchGroup[1]
-			}
-			d.Name = matchGroup[0]
+		if r.MatchString(line) {
 			parts := strings.Split(line, ":")
-			d.Size, d.PartitionTableType = parts[1], parts[5]
+			d.Name, d.Size, d.PartitionTableType = parts[0], parts[1], parts[5]
 			n, _ := strconv.Atoi(parts[3])
 			d.SectorSizeLogical = n
 			n, _ = strconv.Atoi(parts[4])
@@ -119,17 +112,12 @@ func (d *PartedDisk) parse(reader io.Reader) *PartedDisk {
 			if tools.IsSpecialPartition(d.Name) {
 				pInfix = "p"
 			}
-			var name string
-			if len(partitionName) > 0 {
-				name = fmt.Sprintf("%s", partitionName)
-			} else {
-				name = fmt.Sprintf("%s%s%d", d.Name, pInfix, v)
-			}
+			name := fmt.Sprintf("%s%s%d", d.Name, pInfix, v)
 			start, _ := strconv.ParseInt(parts[1][:len(parts[1])-1], 10, 64)
 			end, _ := strconv.ParseInt(parts[2][:len(parts[2])-1], 10, 64)
 			size, _ := strconv.ParseInt(parts[3][:len(parts[3])-1], 10, 64)
 			partition := PartedPartition{Name: name,
-				Number:     v - 1,
+				Number:     v,
 				Start:      start,
 				End:        end,
 				Size:       size,
@@ -164,8 +152,6 @@ func NewPartedDisk(diskName string) (*PartedDisk, error) {
 
 	rdr := strings.NewReader(string(*result))
 	disk.parse(rdr)
-
-	logger.Debug(zap.String("Disk", disk.String()))
 
 	return &disk, nil
 }
