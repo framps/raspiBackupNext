@@ -37,7 +37,7 @@ func NewSystem() *System {
 
 	partedDisks := make([]*commands.PartedDisk, 0, len(s.LsblkDisks.Disks))
 	for _, disk := range s.LsblkDisks.Disks {
-		partedDisk, err := commands.NewPartedDisk(disk.Name)
+		partedDisk, err := commands.NewPartedDisk("/dev/" + disk.Name)
 		tools.HandleError(err)
 		partedDisks = append(partedDisks, partedDisk)
 	}
@@ -57,7 +57,7 @@ func (s System) String() string {
 	result.WriteString(s.LsblkDisks.String())
 	result.WriteString(sep + "*** Parted ***" + sep + "\n")
 	for _, sd := range s.LsblkDisks.Disks {
-		partedDisk, _ := commands.NewPartedDisk(sd.Name)
+		partedDisk, _ := commands.NewPartedDisk("/dev/" + sd.Name)
 		result.WriteString(partedDisk.String())
 	}
 	return result.String()

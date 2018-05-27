@@ -28,7 +28,7 @@ type SystemDevice struct {
 	FullName        string // /dev/sda1, /dev/mmcblk3p2
 	Number          int    // 1, 2
 	Disk            string // sda, mmcblk3
-	PartitionName   string // sda, mmcblk3p
+	PartitionName   string // sda1, mmcblk3p2
 	LocatedOnSDCard bool
 }
 

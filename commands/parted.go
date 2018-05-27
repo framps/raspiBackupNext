@@ -135,13 +135,26 @@ func (d *PartedDisk) parse(reader io.Reader) *PartedDisk {
 }
 
 // NewPartedDisk -
-func NewPartedDisk(diskName string) (*PartedDisk, error) {
+func NewPartedDisk(diskDeviceName string) (*PartedDisk, error) {
 
 	logger := tools.Log
 
 	disk := PartedDisk{Partitions: make(map[int]*PartedPartition, 16)}
 
-	command := NewCommand(TypeSudo, "parted", "-m", diskName, "unit", "s", "print")
+	var diskName string
+	if !strings.HasPrefix(diskDeviceName, "/dev") {
+		diskName = "/dev/" + diskDeviceName
+	} else {
+		diskName = diskDeviceName
+	}
+
+	if len(strings.TrimRight(diskName, "0123456789")) != len(diskName) {
+		err := fmt.Errorf("Invalid diskDeviceName %s", diskDeviceName)
+		logger.Errorf("NewDisk failed for %s: %s", diskName, err.Error())
+		return nil, err
+	}
+
+	command := NewCommand(TypeSudo, "parted", "-m", diskName, "unit", "B", "print")
 	result, err := command.Execute()
 	if err != nil {
 		logger.Errorf("NewDisk failed for %s: %s", diskName, err.Error())

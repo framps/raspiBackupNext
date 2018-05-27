@@ -115,12 +115,10 @@ func NewBlkidDisks() (*BlkidDisks, error) {
 /dev/sdb1: UUID="dFRcFX-d3bX-y9Pp-Hts3-vPyK-hhcL-lAluXv" TYPE="LVM2_member" PARTUUID="6c96114a-01"
 /dev/sdc: UUID="3s8MZp-Dxcd-UExv-JyGC-bXNG-Os8Q-mwqVpP" TYPE="LVM2_member"
 /dev/sdd: UUID="CuaqcK-bAgL-GKC1-EiDy-RFyB-oOhd-ZmfRGX" TYPE="LVM2_member"
-/dev/mapper/Second2-BigData: UUID="49d59d1d-fbd0-4f84-8b89-b8a0a6c20b74" TYPE="ext4"
-/dev/mapper/data2-VMWare: UUID="785577ee-f43d-486d-a88a-3fd03eaac78e" TYPE="ext4"
-/dev/mapper/data2-homeDisk: UUID="02d66411-a8c7-4ff1-be08-6f4a58f87255" TYPE="ext4"
-/dev/mapper/data2-swap: UUID="a2065c48-447a-4c3d-8b49-10183805ede4" TYPE="swap"
-/dev/mapper/Backup-System: UUID="df0a76d8-9810-4af2-a451-05dc17731445" TYPE="ext4"
-/dev/mapper/Backup-Home: UUID="cface186-85ce-4a79-bbbf-a22f3aa7a838" TYPE="ext4
+/dev/mmcblk0p2: UUID="64a5e86f-5ed3-4c9f-aab3-c4ae24bff95a" TYPE="ext4" LABEL="system"
+/dev/mmcblk0p1: SEC_TYPE="msdos" UUID="3312-932F" TYPE="vfat"
+/dev/sdb1: LABEL="black" UUID="76e7d7d4-f6e9-4867-83a7-03eaa3fc878d" TYPE="ext4"
+/dev/sda1: LABEL="silver" UUID="8095dbdf-9b0a-4dda-9352-d56366af43c8" TYPE="ext4"
 */
 
 func (b *BlkidDisks) parse(reader io.Reader) *BlkidDisks {
@@ -131,7 +129,7 @@ func (b *BlkidDisks) parse(reader io.Reader) *BlkidDisks {
 
 		line := scanner.Text()
 
-		r := regexp.MustCompile(`^(/dev/.+)([\d]*):`) // /dev/sda1: UUID="c6ccdbd5-12da-4b78-98c6-13cd63a733c7" TYPE="ext4" PARTUUID="000bee5a-01"
+		r := regexp.MustCompile(`^(/dev/[a-z]+(?:[0-9]+p)?)([\d]+):`) // /dev/sda1: UUID="c6ccdbd5-12da-4b78-98c6-13cd63a733c7" TYPE="ext4" PARTUUID="000bee5a-01"
 
 		var disk *BlkidDisk
 		if matchGroup := r.FindAllStringSubmatch(line, -1); matchGroup != nil {

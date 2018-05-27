@@ -98,6 +98,11 @@ func NewSystem() (*System, error) {
 	lsblkDisks, err := commands.NewLsblkDisks()
 	tools.HandleError(err)
 
+	blkidDisk, err := commands.NewBlkidDisks()
+	tools.HandleError(err)
+
+	fmt.Printf("*** %s\n", blkidDisk)
+
 	for _, d := range lsblkDisks.Disks {
 
 		logger.Debugf("Processing disk %s", d.Name)
