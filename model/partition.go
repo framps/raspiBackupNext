@@ -42,7 +42,7 @@ type Partition struct {
 }
 
 func (p Partition) String() string {
-	return fmt.Sprintf("PartitionNumber: %d - StartBlock: %d - EndBlock: %d - Size: %d - Type: %s - FileSystem: %s - Flags: %s "+
+	return fmt.Sprintf("PartitionNumber: %d - Start: %d - End: %d - Size: %d - Type: %s - FileSystem: %s - Flags: %s "+
 		"UUid: %s - Partuuid: %s - Label: %s - PType: %s",
 		p.Number, p.Start, p.End, p.Size, p.Type, p.FileSystem, p.Flags,
 		p.Uuid, p.Partuuid, p.Label, p.Ptype)
@@ -99,9 +99,9 @@ func NewSystem() (*System, error) {
 
 		disk.Partitions = make(map[int]*Partition, len(d.Partitions))
 
-		for _, p := range d.Partitions {
+		for i, p := range partedDisk.Partitions {
 			partition := Partition{}
-			copier.Copy(&partition, partedDisk.Partitions[p.Number])
+			copier.Copy(&partition, partedDisk.Partitions[i])
 			disk.Partitions[p.Number] = &partition
 		}
 	}
