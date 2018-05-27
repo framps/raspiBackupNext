@@ -119,6 +119,8 @@ func NewSystem() (*System, error) {
 		for i, p := range partedDisk.Partitions {
 			partition := Partition{}
 			copier.Copy(&partition, partedDisk.Partitions[i])
+			blkidPartition := blkidDisk.Disks["/dev/"+d.Name].Partitions[i]
+			copier.Copy(&partition, &blkidPartition)
 			disk.Partitions[p.Number] = &partition
 		}
 	}
