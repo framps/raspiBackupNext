@@ -52,7 +52,7 @@ func discoverSystem() {
 	system, err := model.NewSystem()
 	tools.HandleError(err)
 	fmt.Printf("*** From system:\n%s\n", system)
-	if err := model.NewSystemToJSON("system.model"); err != nil {
+	if err = system.ToJSON("system.model"); err != nil {
 		tools.HandleError(err)
 	}
 	if system, err = model.NewSystemFromJson("system.model"); system != nil {

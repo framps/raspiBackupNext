@@ -53,7 +53,8 @@ type PartedDisk struct {
 func (d PartedDisk) String() string {
 	var result bytes.Buffer
 
-	result.WriteString(fmt.Sprintf("Disk: %s Size: %s Sector size: %d/%d PartitiontableType: %s\n", d.Name, d.Size, d.SectorSizeLogical, d.SectorSizePhysical, d.PartitionTableType))
+	result.WriteString(fmt.Sprintf("Disk: %s Size: %s Sector size: %d/%d PartitiontableType: %s\n",
+		d.Name, d.Size, d.SectorSizeLogical, d.SectorSizePhysical, d.PartitionTableType))
 
 	index := make([]*PartedPartition, 0, len(d.Partitions))
 	for _, partition := range d.Partitions {
@@ -148,7 +149,10 @@ func NewPartedDisk(diskDeviceName string) (*PartedDisk, error) {
 		diskName = diskDeviceName
 	}
 
-	if len(strings.TrimRight(diskName, "0123456789")) != len(diskName) {
+	//tools.IsSpecialPartition(diskDeviceName)
+	//re := regexp.MustCompile("^/dev/([a-z]+)(([0-9]+)p)?([0-9]+)$")
+
+	if false {
 		err := fmt.Errorf("Invalid diskDeviceName %s", diskDeviceName)
 		logger.Errorf("NewDisk failed for %s: %s", diskName, err.Error())
 		return nil, err

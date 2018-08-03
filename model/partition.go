@@ -168,16 +168,15 @@ func (s System) String() string {
 	return result.String()
 }
 
-// NewSystemToJSON - -
-func NewSystemToJSON(fileName string) error {
+// ToJSON -
+func (s *System) ToJSON(fileName string) error {
 
-	b, err := NewSystem()
-	if err != nil {
-		return err
-	}
+	var (
+		j   []byte
+		err error
+	)
 
-	var j []byte
-	if j, err = json.MarshalIndent(b, "", " "); err != nil {
+	if j, err = json.MarshalIndent(s, "", " "); err != nil {
 		return err
 	}
 
