@@ -92,17 +92,25 @@ func NewSystem() (*System, error) {
 
 	logger := tools.Log
 
-	system := System{}
+	var (
+		err           error
+		lsblkDisks    *commands.LsblkDisks
+		blkidDisks    *commands.BlkidDisks
+		systemDevices *commands.SystemDevices
+	)
 
 	// retrieve all known disks of system
-	lsblkDisks, err := commands.NewLsblkDisks()
+	lsblkDisks, err = commands.NewLsblkDisks()
 	tools.HandleError(err)
 
-	blkidDisk, err := commands.NewBlkidDisks()
+	blkidDisks, err = commands.NewBlkidDisks()
+	tools.HandleError(err)
+	fmt.Printf("*** %s\n", blkidDisks)
+
+	systemDevices, err = commands.NewSystemDevices()
 	tools.HandleError(err)
 
-	fmt.Printf("*** %s\n", blkidDisk)
-
+	system := System{}
 	for _, d := range lsblkDisks.Disks {
 
 		logger.Debugf("Processing disk %s", d.Name)
@@ -119,14 +127,11 @@ func NewSystem() (*System, error) {
 		for i, p := range partedDisk.Partitions {
 			partition := Partition{}
 			copier.Copy(&partition, partedDisk.Partitions[i])
-			blkidPartition := blkidDisk.Disks["/dev/"+d.Name].Partitions[i]
+			blkidPartition := blkidDisks.Disks["/dev/"+d.Name].Partitions[i]
 			copier.Copy(&partition, &blkidPartition)
 			disk.Partitions[p.Number] = &partition
 		}
 	}
-
-	systemDevices, err := commands.NewSystemDevices()
-	tools.HandleError(err)
 
 	system.Bootpartition = systemDevices.Bootdevice
 	system.Bootpartition = systemDevices.Rootdevice
@@ -189,8 +194,8 @@ func (s *System) ToJSON(fileName string) error {
 
 }
 
-// NewSystemFromJson -
-func NewSystemFromJson(fileName string) (*System, error) {
+// NewSystemFromJSON -
+func NewSystemFromJSON(fileName string) (*System, error) {
 
 	j, err := ioutil.ReadFile(fileName)
 	if err != nil {

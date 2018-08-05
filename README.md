@@ -1,3 +1,3 @@
 # raspiBackupNext
 
-Next version of raspiBackup
+This may be the next version of raspiBackup
