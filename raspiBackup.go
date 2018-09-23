@@ -12,6 +12,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/framps/raspiBackupNext/discover"
 	"github.com/framps/raspiBackupNext/model"
@@ -23,6 +24,7 @@ func main() {
 	var debugFlag = flag.Bool("debug", false, "Enable debug messages")
 	var collectFlag = flag.Bool("collect", false, "Collect system information")
 	var discoverFlag = flag.Bool("discover", false, "Discover system information")
+	var parallelFlag = flag.Bool("parallel", false, "Enable parallel execution")
 	flag.Parse()
 
 	logger := tools.NewLogger(*debugFlag)
@@ -32,24 +34,25 @@ func main() {
 		*discoverFlag = true
 	}
 
+	start := time.Now()
 	if *collectFlag {
-		collectSystem()
-		os.Exit(0)
+		collectSystem(*parallelFlag)
 	}
-
 	if *discoverFlag {
-		discoverSystem()
-		os.Exit(0)
+		discoverSystem(*parallelFlag)
 	}
-
+	end := time.Now()
+	fmt.Printf("Execution time: %s\n", end.Sub(start))
+	os.Exit(0)
 }
 
-func collectSystem() {
-	fmt.Printf("%s\n", discover.NewSystem())
+func collectSystem(parallelExecution bool) {
+	fmt.Printf("=== Collect system ===\n\n%s\n", discover.NewSystem(parallelExecution))
 }
 
-func discoverSystem() {
-	system, err := model.NewSystem()
+func discoverSystem(parallelExecution bool) {
+	fmt.Printf("=== Discover system ===\n\n")
+	system, err := model.NewSystem(parallelExecution)
 	tools.HandleError(err)
 	fmt.Printf("*** From system:\n%s\n", system)
 	if err = system.ToJSON("system.model"); err != nil {

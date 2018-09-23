@@ -15,6 +15,7 @@ import (
 	"io/ioutil"
 	"os"
 	"sort"
+	"sync"
 
 	"github.com/framps/raspiBackupNext/commands"
 	"github.com/framps/raspiBackupNext/tools"
@@ -88,7 +89,7 @@ type System struct {
 }
 
 // NewSystem -
-func NewSystem() (*System, error) {
+func NewSystem(parallelExecution bool) (*System, error) {
 
 	logger := tools.Log
 
@@ -99,16 +100,34 @@ func NewSystem() (*System, error) {
 		systemDevices *commands.SystemDevices
 	)
 
-	// retrieve all known disks of system
-	lsblkDisks, err = commands.NewLsblkDisks()
-	tools.HandleError(err)
+	if parallelExecution {
+		var wg sync.WaitGroup
+		wg.Add(3)
 
-	blkidDisks, err = commands.NewBlkidDisks()
-	tools.HandleError(err)
-	fmt.Printf("*** %s\n", blkidDisks)
+		// retrieve all known disks of system
+		go func() {
+			lsblkDisks, err = commands.NewLsblkDisks()
+			tools.HandleError(err)
+			wg.Done()
+		}()
 
-	systemDevices, err = commands.NewSystemDevices()
-	tools.HandleError(err)
+		go func() {
+			blkidDisks, err = commands.NewBlkidDisks()
+			tools.HandleError(err)
+			wg.Done()
+		}()
+
+		go func() {
+			systemDevices, err = commands.NewSystemDevices()
+			tools.HandleError(err)
+			wg.Done()
+		}()
+		wg.Wait()
+	} else {
+		lsblkDisks, err = commands.NewLsblkDisks()
+		blkidDisks, err = commands.NewBlkidDisks()
+		systemDevices, err = commands.NewSystemDevices()
+	}
 
 	system := System{}
 	for _, d := range lsblkDisks.Disks {

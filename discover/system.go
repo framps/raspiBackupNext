@@ -11,6 +11,7 @@ package discover
 import (
 	"bytes"
 	"strings"
+	"sync"
 
 	"github.com/framps/raspiBackupNext/commands"
 	"github.com/framps/raspiBackupNext/tools"
@@ -23,17 +24,35 @@ type System struct {
 	LsblkDisks    *commands.LsblkDisks
 }
 
-func NewSystem() *System {
+func NewSystem(parallelExecution bool) *System {
 
 	s := System{}
 	var err error
 
-	s.SystemDevices, err = commands.NewSystemDevices()
-	tools.HandleError(err)
-	s.BlkidDisks, err = commands.NewBlkidDisks()
-	tools.HandleError(err)
-	s.LsblkDisks, err = commands.NewLsblkDisks()
-	tools.HandleError(err)
+	if parallelExecution {
+		var wg sync.WaitGroup
+		wg.Add(3)
+		go func() {
+			s.SystemDevices, err = commands.NewSystemDevices()
+			tools.HandleError(err)
+			wg.Done()
+		}()
+		go func() {
+			s.BlkidDisks, err = commands.NewBlkidDisks()
+			tools.HandleError(err)
+			wg.Done()
+		}()
+		go func() {
+			s.LsblkDisks, err = commands.NewLsblkDisks()
+			tools.HandleError(err)
+			wg.Done()
+		}()
+		wg.Wait()
+	} else {
+		s.SystemDevices, err = commands.NewSystemDevices()
+		s.BlkidDisks, err = commands.NewBlkidDisks()
+		s.LsblkDisks, err = commands.NewLsblkDisks()
+	}
 
 	partedDisks := make([]*commands.PartedDisk, 0, len(s.LsblkDisks.Disks))
 	for _, disk := range s.LsblkDisks.Disks {
