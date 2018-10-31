@@ -16,7 +16,7 @@ ifdef DEBUG
 endif
 
 setup:
-	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+	curl -s https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
 update:
 	dep ensure
@@ -24,7 +24,7 @@ update:
 test:
 	go test ${MYFILES} -v
 
-build: setup update test-verbose build-local build-raspi
+build: setup update test build-local build-raspi
 
 build-local:
 	go build -o ${BIN_DIR}/${TARGET} ${TARGET}.go
