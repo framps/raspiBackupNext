@@ -16,12 +16,11 @@ import (
 )
 
 var (
-	// Log -
-	Log *zap.SugaredLogger
+	Logger *zap.SugaredLogger
 )
 
 // NewLogger -
-func NewLogger(debug bool) *zap.SugaredLogger {
+func NewLogger(debug bool) {
 
 	cfg := zap.Config{
 		Level:            zap.NewAtomicLevelAt(zap.DebugLevel),
@@ -35,24 +34,21 @@ func NewLogger(debug bool) *zap.SugaredLogger {
 	_, envDefind := os.LookupEnv("DEBUG")
 
 	if !envDefind && !debug {
-		cfg.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
-		cfg.OutputPaths = append(cfg.OutputPaths, "./raspiBackup.log")
-		cfg.ErrorOutputPaths = append(cfg.ErrorOutputPaths, "./raspiBackup.log")
+		cfg.OutputPaths = []string{"./raspiBackup.log"}
+		cfg.ErrorOutputPaths = []string{"./raspiBackup.log"}
 	}
 	logger, err := cfg.Build()
 	if err != nil {
 		fmt.Printf("Unable to create logger. Root cause: %s", err.Error())
 		os.Exit(42)
 	}
-	Log = logger.Sugar()
-	return Log
+
+	zap.ReplaceGlobals(logger)
+	Logger = zap.S()
+
 }
 
-// Sync -
-func Sync() {
-	Log.Sync()
-}
-
+// HandleError -
 func HandleError(err error) {
 	if err != nil {
 		panic(err)

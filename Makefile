@@ -22,9 +22,6 @@ update:
 	dep ensure
 
 test:
-	go test ${MYFILES}
-
-test-verbose:
 	go test ${MYFILES} -v
 
 build: setup update test-verbose build-local build-raspi

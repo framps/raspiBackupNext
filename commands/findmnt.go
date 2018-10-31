@@ -39,8 +39,6 @@ func (p SystemDevice) String() string {
 // NewSystemDevice -
 func NewSystemDevice(fullName string) (*SystemDevice, error) {
 
-	logger := tools.Log
-
 	p := &SystemDevice{DeviceName: fullName, LocatedOnSDCard: false}
 
 	re := regexp.MustCompile("^/dev/([a-z]+)(([0-9]+)p)?([0-9]+)$")
@@ -48,7 +46,7 @@ func NewSystemDevice(fullName string) (*SystemDevice, error) {
 
 	if len(matches) != 5 {
 		e := fmt.Errorf("Illegal systempartition %s", fullName)
-		logger.Debug(e)
+		tools.Logger.Error(e)
 		return nil, e
 	}
 
@@ -94,12 +92,10 @@ func NewSystemDevices() (*SystemDevices, error) {
 		rootDevice string
 	)
 
-	logger := tools.Log
-
 	command := NewCommand(TypeSudo, "findmnt", "/boot", "-o", "source", "-n")
 	result, err := command.Execute()
 	if err != nil {
-		logger.Debugf("NewSystemDevices /boot failed: %s", err.Error())
+		tools.Logger.Debugf("NewSystemDevices /boot failed: %s", err.Error())
 	} else {
 		rdr := strings.NewReader(string(*result))
 		scanner := bufio.NewScanner(rdr)
@@ -113,7 +109,7 @@ func NewSystemDevices() (*SystemDevices, error) {
 	command = NewCommand(TypeSudo, "findmnt", "/", "-o", "source", "-n")
 	result, err = command.Execute()
 	if err != nil {
-		logger.Debugf("NewSystemDevices / failed: %s", err.Error())
+		tools.Logger.Debugf("NewSystemDevices / failed: %s", err.Error())
 	} else {
 		rdr := strings.NewReader(string(*result))
 		scanner := bufio.NewScanner(rdr)

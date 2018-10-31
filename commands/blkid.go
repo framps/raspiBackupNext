@@ -91,7 +91,7 @@ func (b *BlkidDisks) String() string {
 // NewBlkidDisks -
 func NewBlkidDisks() (*BlkidDisks, error) {
 
-	logger := tools.Log
+	logger := tools.Logger
 
 	blkid := BlkidDisks{make(map[string]*BlkidDisk, 16)}
 

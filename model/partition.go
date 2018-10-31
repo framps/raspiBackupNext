@@ -20,6 +20,7 @@ import (
 	"github.com/framps/raspiBackupNext/commands"
 	"github.com/framps/raspiBackupNext/tools"
 	"github.com/jinzhu/copier"
+	"go.uber.org/zap"
 )
 
 // Partition -
@@ -91,8 +92,6 @@ type System struct {
 // NewSystem -
 func NewSystem(parallelExecution bool) (*System, error) {
 
-	logger := tools.Log
-
 	var (
 		err           error
 		lsblkDisks    *commands.LsblkDisks
@@ -132,7 +131,7 @@ func NewSystem(parallelExecution bool) (*System, error) {
 	system := System{}
 	for _, d := range lsblkDisks.Disks {
 
-		logger.Debugf("Processing disk %s", d.Name)
+		tools.Logger.Debugf("Processing disk %s", d.Name)
 		disk := Disk{Name: d.Name}
 
 		partedDisk, err := commands.NewPartedDisk("/dev/" + disk.Name)

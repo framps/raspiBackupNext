@@ -27,8 +27,7 @@ func main() {
 	var parallelFlag = flag.Bool("parallel", false, "Enable parallel execution")
 	flag.Parse()
 
-	logger := tools.NewLogger(*debugFlag)
-	defer logger.Sync()
+	tools.NewLogger(*debugFlag)
 
 	if !*collectFlag && !*discoverFlag {
 		*discoverFlag = true
@@ -42,7 +41,7 @@ func main() {
 		discoverSystem(*parallelFlag)
 	}
 	end := time.Now()
-	fmt.Printf("Execution time: %s\n", end.Sub(start))
+	tools.Logger.Debug("Execution time ", end.Sub(start))
 	os.Exit(0)
 }
 

@@ -80,8 +80,6 @@ BYT;
 
 func (d *PartedDisk) parse(reader io.Reader) *PartedDisk {
 
-	logger := tools.Log
-
 	scanner := bufio.NewScanner(reader)
 
 	// /dev/sde:15613952s:scsi:512:512:msdos:Generic STORAGE DEVICE:;
@@ -125,7 +123,7 @@ func (d *PartedDisk) parse(reader io.Reader) *PartedDisk {
 				Type:       parts[4],
 				FileSystem: parts[5],
 				Flags:      parts[6][:len(parts[6])-1]}
-			logger.Debug(zap.Any("Partition", partition))
+			tools.Logger.Debug(zap.Any("Partition", partition))
 			d.Partitions[v] = &partition
 		} else {
 			break
@@ -137,8 +135,6 @@ func (d *PartedDisk) parse(reader io.Reader) *PartedDisk {
 
 // NewPartedDisk -
 func NewPartedDisk(diskDeviceName string) (*PartedDisk, error) {
-
-	logger := tools.Log
 
 	disk := PartedDisk{Partitions: make(map[int]*PartedPartition, 16)}
 
@@ -154,18 +150,18 @@ func NewPartedDisk(diskDeviceName string) (*PartedDisk, error) {
 
 	if false {
 		err := fmt.Errorf("Invalid diskDeviceName %s", diskDeviceName)
-		logger.Errorf("NewDisk failed for %s: %s", diskName, err.Error())
+		tools.Logger.Errorf("NewDisk failed for %s: %s", diskName, err.Error())
 		return nil, err
 	}
 
 	command := NewCommand(TypeSudo, "parted", "-m", diskName, "unit", "B", "print")
 	result, err := command.Execute()
 	if err != nil {
-		logger.Errorf("NewDisk failed for %s: %s", diskName, err.Error())
+		tools.Logger.Errorf("NewDisk failed for %s: %s", diskName, err.Error())
 		return nil, err
 	}
 
-	logger.Debug(zap.String("Disk", string(*result)))
+	tools.Logger.Debug(zap.String("Disk", string(*result)))
 
 	rdr := strings.NewReader(string(*result))
 	disk.parse(rdr)
@@ -176,16 +172,14 @@ func NewPartedDisk(diskDeviceName string) (*PartedDisk, error) {
 // NewPartedFromFile -
 func NewPartedFromFile(fileName string) (*PartedDisk, error) {
 
-	logger := tools.Log
-
-	logger.Debugf("Filename: %s\n", fileName)
+	tools.Logger.Debugf("Filename: %s\n", fileName)
 
 	b, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		return nil, err
 	}
 
-	logger.Debugf("Contents: %s\n", string(b))
+	tools.Logger.Debugf("Contents: %s\n", string(b))
 
 	disk := PartedDisk{Partitions: make(map[int]*PartedPartition, 16)}
 

@@ -17,3 +17,4 @@ bin/
 vendor/
 
 raspiBackup.log
+system.model

@@ -115,18 +115,16 @@ func (d LsblkDisks) String() string {
 // NewLsblkDisks -
 func NewLsblkDisks() (*LsblkDisks, error) {
 
-	logger := tools.Log
-
 	lsblkids := LsblkDisks{make(map[string]*LsblkDisk, 16)}
 
 	command := NewCommand(TypeSudo, "lsblk", "-r", "-n", "-b")
 	result, err := command.Execute()
 	if err != nil {
-		logger.Errorf("NewLsblkid failed: %s", err.Error())
+		tools.Logger.Errorf("NewLsblkid failed: %s", err.Error())
 		return nil, err
 	}
 
-	logger.Debug(zap.String("Lsblkid", string(*result)))
+	tools.Logger.Debug(zap.String("Lsblkid", string(*result)))
 
 	rdr := strings.NewReader(string(*result))
 	lsblkids.parse(rdr)
