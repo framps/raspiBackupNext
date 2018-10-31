@@ -108,6 +108,11 @@ func NewBlkidDisks() (*BlkidDisks, error) {
 	return &blkid, nil
 }
 
+// NewBlkidPartition
+func NewBlkidPartition(partitionNumber int) *BlkidPartition {
+	return &BlkidPartition{Number: partitionNumber, Label: "N/A", Partuuid: "N/A", Pttype: "N/A", Type: "N/A", Uuid: "N/A"}
+}
+
 /*
 /dev/sda1: UUID="96ad35d1-85b1-45c8-941d-5c06e2ccc3c4" TYPE="ext4" PARTUUID="1de6ca19-01"
 /dev/sdb1: UUID="dFRcFX-d3bX-y9Pp-Hts3-vPyK-hhcL-lAluXv" TYPE="LVM2_member" PARTUUID="6c96114a-01"
@@ -146,7 +151,7 @@ func (b *BlkidDisks) parse(reader io.Reader) *BlkidDisks {
 			partitionNumber, _ := strconv.Atoi(d[2])
 			parts := strings.Split(line, " ")
 
-			partition := BlkidPartition{Number: partitionNumber}
+			partition := NewBlkidPartition(partitionNumber)
 			for i := range parts {
 				e := strings.Split(parts[i], "=")
 				switch e[0] {
@@ -161,7 +166,7 @@ func (b *BlkidDisks) parse(reader io.Reader) *BlkidDisks {
 				case "PTTYPE":
 					partition.Pttype = strings.Replace(e[1], `"`, "", -1)
 				}
-				disk.Partitions[partitionNumber] = &partition
+				disk.Partitions[partitionNumber] = partition
 			}
 		}
 	}

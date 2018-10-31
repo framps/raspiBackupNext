@@ -62,6 +62,11 @@ func NewLsblkDisk(name string) *LsblkDisk {
 	return &disk
 }
 
+// NewLsblkPartition -
+func NewLsblkPartition() *LsblkPartition {
+	return &LsblkPartition{MajMin: "N/A", Mountpoint: "N/A", Name: "N/A", Rm: "N/A", Type: "N/A"}
+}
+
 // LsblkPartition -
 type LsblkPartition struct {
 	Name       string
@@ -176,11 +181,11 @@ func (d *LsblkDisks) parse(reader io.Reader) *LsblkDisks {
 			matches := re.FindStringSubmatch(elements[0])
 			partitionNumberString := matches[2]
 			partitionNumber, _ := strconv.Atoi(partitionNumberString)
-			partition := LsblkPartition{}
+			partition := NewLsblkPartition()
 			size, _ := strconv.ParseInt(elements[3], 10, 64)
 			partition.Name, partition.Number, partition.MajMin, partition.Rm, partition.Size, partition.Ro, partition.Type, partition.Mountpoint =
 				matches[1]+matches[2], partitionNumber, elements[1], elements[2], size, elements[4], elements[5], elements[6]
-			disk.Partitions[partitionNumber] = &partition
+			disk.Partitions[partitionNumber] = partition
 		}
 
 	}
