@@ -20,7 +20,6 @@ import (
 	"github.com/framps/raspiBackupNext/commands"
 	"github.com/framps/raspiBackupNext/tools"
 	"github.com/jinzhu/copier"
-	"go.uber.org/zap"
 )
 
 // Partition -

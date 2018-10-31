@@ -21,7 +21,6 @@ import (
 	"strings"
 
 	"github.com/framps/raspiBackupNext/tools"
-	"go.uber.org/zap"
 )
 
 // BlkidPartition -
@@ -102,7 +101,6 @@ func NewBlkidDisks() (*BlkidDisks, error) {
 		return nil, err
 	}
 
-	logger.Debug(zap.String("Blkid", string(*result)))
 	rdr := strings.NewReader(string(*result))
 
 	blkid.parse(rdr)

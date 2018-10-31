@@ -47,8 +47,8 @@ func CommandFromFile(t TestCommandType, fileName string) (string, error) {
 	return "", nil
 }
 
-// Command -
-func Command(t *testing.T, command TestCommandType, testName string) {
+// VerifyData -
+func VerifyData(t *testing.T, command TestCommandType, testName string) {
 
 	tools.NewLogger(false)
 
@@ -57,7 +57,7 @@ func Command(t *testing.T, command TestCommandType, testName string) {
 
 	var tests int
 	for _, f := range files {
-		t.Logf("Processing %s\n", f)
+		t.Logf("Verifying %s\n", f)
 
 		parts := strings.Split(f, ".")
 		inputFileName := parts[0] + ".input"

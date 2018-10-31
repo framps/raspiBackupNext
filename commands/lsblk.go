@@ -21,7 +21,6 @@ import (
 	"strings"
 
 	"github.com/framps/raspiBackupNext/tools"
-	"go.uber.org/zap"
 )
 
 // LsblkDisk -
@@ -123,8 +122,6 @@ func NewLsblkDisks() (*LsblkDisks, error) {
 		tools.Logger.Errorf("NewLsblkid failed: %s", err.Error())
 		return nil, err
 	}
-
-	tools.Logger.Debug(zap.String("Lsblkid", string(*result)))
 
 	rdr := strings.NewReader(string(*result))
 	lsblkids.parse(rdr)

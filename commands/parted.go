@@ -161,8 +161,6 @@ func NewPartedDisk(diskDeviceName string) (*PartedDisk, error) {
 		return nil, err
 	}
 
-	tools.Logger.Debug(zap.String("Disk", string(*result)))
-
 	rdr := strings.NewReader(string(*result))
 	disk.parse(rdr)
 

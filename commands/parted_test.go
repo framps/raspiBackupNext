@@ -13,5 +13,5 @@ import (
 )
 
 func TestParted(t *testing.T) {
-	Command(t, Parted, "parted")
+	VerifyData(t, Parted, "parted")
 }

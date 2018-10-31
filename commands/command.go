@@ -65,13 +65,13 @@ func NewCommand(commandType CommandType, command string, args ...string) *Cmd {
 
 // Execute -
 func (c *Cmd) Execute() (*[]byte, error) {
-	tools.Logger.Debug("Executing command %s %+v", c.Path, c.Args)
+	tools.Logger.Debug("Executing command ", c.Path, c.Args)
 	stdoutStderr, err := c.CombinedOutput()
 	if err != nil {
-		tools.Logger.Debugf("Command error: %s", err)
+		tools.Logger.Errorf("Command error: %s", err)
 		return &stdoutStderr, err
 	}
-	tools.Logger.Debugf("Command result: %s", stdoutStderr)
+	tools.Logger.Debugf("Command result:\n%s", stdoutStderr)
 	return &stdoutStderr, nil
 
 }

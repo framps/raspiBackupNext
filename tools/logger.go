@@ -33,9 +33,14 @@ func NewLogger(debug bool) {
 
 	_, envDefind := os.LookupEnv("DEBUG")
 
-	if !envDefind && !debug {
+	if !envDefind && debug {
 		cfg.OutputPaths = []string{"./raspiBackup.log"}
 		cfg.ErrorOutputPaths = []string{"./raspiBackup.log"}
+	} else if envDefind && debug {
+		cfg.OutputPaths = append(cfg.OutputPaths, "./raspiBackup.log")
+		cfg.ErrorOutputPaths = append(cfg.ErrorOutputPaths, "./raspiBackup.log")
+	} else {
+		cfg.Level = zap.NewAtomicLevelAt(zap.FatalLevel)
 	}
 	logger, err := cfg.Build()
 	if err != nil {

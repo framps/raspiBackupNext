@@ -13,5 +13,5 @@ import (
 )
 
 func TestBlkid(t *testing.T) {
-	Command(t, Blkid, "blkid")
+	VerifyData(t, Blkid, "blkid")
 }

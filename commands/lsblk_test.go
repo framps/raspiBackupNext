@@ -13,5 +13,5 @@ import (
 )
 
 func TestLsblk(t *testing.T) {
-	Command(t, Lsblkid, "lsblk")
+	VerifyData(t, Lsblkid, "lsblk")
 }
