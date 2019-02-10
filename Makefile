@@ -15,16 +15,13 @@ ifdef DEBUG
 	DEBUG=-debug
 endif
 
-setup:
-	curl -s https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-
 update:
-	dep ensure
+	go mod download	
 
 test:
 	go test ${MYFILES} -v
 
-build: setup update test build-local build-raspi
+build: update test build-local build-raspi
 
 build-local:
 	go build -o ${BIN_DIR}/${TARGET} ${TARGET}.go
