@@ -1,7 +1,7 @@
 Disk: /dev/mmcblk0p
-Partition: 1 Uuid:                                3312-932F Type:   vfat Partuuid:        Pttype:        Label:   boot
-Partition: 2 Uuid:     64a5e86f-5ed3-4c9f-aab3-c4ae24bff95a Type:   ext4 Partuuid:        Pttype:        Label: system
+Partition: 1 Uuid:                                3312-932F Type:   vfat Partuuid:    N/A Pttype:    N/A Label:   boot
+Partition: 2 Uuid:     64a5e86f-5ed3-4c9f-aab3-c4ae24bff95a Type:   ext4 Partuuid:    N/A Pttype:    N/A Label: system
 Disk: /dev/sda
-Partition: 1 Uuid:     8095dbdf-9b0a-4dda-9352-d56366af43c8 Type:   ext4 Partuuid:        Pttype:        Label: silver
+Partition: 1 Uuid:     8095dbdf-9b0a-4dda-9352-d56366af43c8 Type:   ext4 Partuuid:    N/A Pttype:    N/A Label: silver
 Disk: /dev/sdb
-Partition: 1 Uuid:     76e7d7d4-f6e9-4867-83a7-03eaa3fc878d Type:   ext4 Partuuid:        Pttype:        Label:  black
+Partition: 1 Uuid:     76e7d7d4-f6e9-4867-83a7-03eaa3fc878d Type:   ext4 Partuuid:    N/A Pttype:    N/A Label:  black
