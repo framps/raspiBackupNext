@@ -10,6 +10,7 @@
 TARGET=raspiBackup
 BIN_DIR=bin
 MYFILES=$(shell go list ./... | grep -v /vendor/ | grep -v tools | grep -v -E '/raspiBackupNext$$' |  grep -v -E "discover|model")
+GO111MODULE=on
 
 ifdef DEBUG
 	DEBUG=-debug
