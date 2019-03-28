@@ -16,14 +16,13 @@ ifdef DEBUG
 	DEBUG=-debug
 endif
 
-update:
-	go mod tidy
-	go mod download
+deps:
+	go build -v ./...
 
 test:
 	go test ${MYFILES} -v
 
-build: update test build-local build-raspi
+build: deps test build-local build-raspi
 
 build-local:
 	go build -o ${BIN_DIR}/${TARGET} ${TARGET}.go
